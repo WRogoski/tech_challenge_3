@@ -22,6 +22,36 @@ select
         when 'Sim' in (d7.valor, d8.valor, d9.valor, d10.valor, d11.valor, d12.valor, d13.valor, d14.valor, d15.valor, d16.valor, d17.valor, d18.valor, d19.valor) then 'Sim'
         else 'Não'
     end as teve_sintomas,
+ case
+        when 'Sim' IN (d7.valor, d8.valor, d9.valor, d10.valor, d11.valor, d12.valor, d13.valor, d14.valor, d15.valor, d16.valor, d17.valor, d18.valor, d19.valor) THEN 
+            (case
+                when d7.valor = 'Sim' then 1 else 0 end +
+            case
+                when d8.valor = 'Sim' then 1 else 0 end +
+            case
+                when d9.valor = 'Sim' then 1 else 0 end +
+            case
+                when d10.valor = 'Sim' then 1 else 0 end +
+            case
+                when d11.valor = 'Sim' then 1 else 0 end +
+            case
+                when d12.valor = 'Sim' then 1 else 0 end +
+            case
+                when d13.valor = 'Sim' then 1 else 0 end +
+            case
+                when d14.valor = 'Sim' then 1 else 0 end +
+            case
+                when d15.valor = 'Sim' then 1 else 0 end +
+            case
+                when d16.valor = 'Sim' then 1 else 0 end +
+            case
+                when d17.valor = 'Sim' then 1 else 0 end +
+            case
+                when d18.valor = 'Sim' then 1 else 0 end +
+            case
+                when d19.valor = 'Sim' then 1 else 0 end)
+        else 0
+    end as num_sintomas,
 -- atendimento
     d20.valor as procurou_atendimento,
     d28.valor as atendimento_ubs,
