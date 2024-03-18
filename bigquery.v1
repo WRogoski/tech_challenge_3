@@ -4,7 +4,9 @@ select
     m.mes as mes,
     m.semana as semana,
     e.nome as estado,
+    d1.valor as urbano_rural,
 -- sintomas
+    d50.valor as restricao_contato,
     d7.valor    as  febre,
     d8.valor    as  tosse,
     d9.valor    as  dor_de_garganta,
@@ -23,7 +25,7 @@ select
         else 'Não'
     end as teve_sintomas,
  case
-        when 'Sim' IN (d7.valor, d8.valor, d9.valor, d10.valor, d11.valor, d12.valor, d13.valor, d14.valor, d15.valor, d16.valor, d17.valor, d18.valor, d19.valor) THEN 
+        when 'Sim' in (d7.valor, d8.valor, d9.valor, d10.valor, d11.valor, d12.valor, d13.valor, d14.valor, d15.valor, d16.valor, d17.valor, d18.valor, d19.valor) then 
             (case
                 when d7.valor = 'Sim' then 1 else 0 end +
             case
@@ -63,12 +65,11 @@ select
     d34.valor as ficou_internado,
     d35.valor as foi_entubado,
     d36.valor as tem_plano_saude,
-    d50.valor as restricao_contato,
 -- teste covid
-    d37.valor   as  fez_teste_covid,
+    d37.valor as fez_teste_covid,
     case
-        when d37.valor = 'Sim' and 'positivo' in (d39.valor, d41.valor, d43.valor) then 'Sim'
-        else 'Não'
+        when d37.valor = 'Sim' and 'Positivo' in (d39.valor, d41.valor, d43.valor) then 'Positivo'
+        else 'Negativo'
     end as resultado_teste_covid,
 -- doencas pre-existentes
     d44.valor   as  diabetes,
@@ -83,6 +84,8 @@ select
     end as doenca_pre_existente,
 -- financeiro
     d51.valor as trabalhou,
+    d54.valor as ctps_assinada,
+    d71.valor as contribui_inss,
     d52.valor as afasamento_trabalho,
     m.c01012 as valor_renda,
     m.d0013 as valor_aposentadoria,
@@ -92,6 +95,9 @@ select
     m.d0053 as valor_auxilios,
     m.d0063 as valor_seguro_desemprego,
     m.d0073 as valor_outros_rendimentos,
+    coalesce(m.c01012, 0) + coalesce (m.d0013, 0) + coalesce (m.d0023, 0) +
+    coalesce (m.d0033, 0) + coalesce (m.d0043, 0) + coalesce (m.d0053, 0) +
+    coalesce (m.d0063, 0) + coalesce (m.d0073, 0) as soma_rendimentos,
     d65.valor as emprestimo,
     d70.valor as casa_propria_alugada_outros
 from
@@ -152,6 +158,7 @@ from
     left join   `basedosdados.br_ibge_pnad_covid.dicionario` as     d57 on  m.c007e =   cast(   d57.chave   as  string  )   and d57.nome_coluna =   'c007e'
     left join   `basedosdados.br_ibge_pnad_covid.dicionario` as     d65 on  m.e001 =    cast(   d65.chave   as  string  )   and d65.nome_coluna =   'e001'
     left join   `basedosdados.br_ibge_pnad_covid.dicionario` as     d70 on  m.f001 =    cast(   d70.chave   as  string  )   and d70.nome_coluna =   'f001'
+    left join   `basedosdados.br_ibge_pnad_covid.dicionario` as     d71 on  m.c014 =    cast(   d71.chave   as  string  )   and d71.nome_coluna =   'c014'
 -- seleção do período de 3 meses para consulta
 where
     mes between 7 and 9
