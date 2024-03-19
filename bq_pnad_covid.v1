@@ -62,6 +62,11 @@ select
     d31.valor as atendimento_consultorio_privado,
     d32.valor as atendimento_ps_privado,
     d33.valor as atendimento_hospital_privado,
+case
+        when d20.valor = 'Sim' and 'Sim' in (d30.valor, d33.valor) then 'Buscou hospital'
+        when d20.valor = 'Não' or d20.valor is null then 'Não buscou atendimento'
+        else 'Outras formas de atendimento'
+    end as forma_atendimento,
     d34.valor as ficou_internado,
     d35.valor as foi_entubado,
     d36.valor as tem_plano_saude,
